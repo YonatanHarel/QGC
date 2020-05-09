@@ -991,6 +991,7 @@ void MockLink::_respondWithAutopilotVersion(void)
 
     uint8_t customVersion[8] = { };
     uint32_t flightVersion = 0;
+    uint32_t customSwVersion;
 #if !defined(NO_ARDUPILOT_DIALECT)
     if (_firmwareType == MAV_AUTOPILOT_ARDUPILOTMEGA) {
         if (_vehicleType == MAV_TYPE_FIXED_WING) {
@@ -1011,6 +1012,12 @@ void MockLink::_respondWithAutopilotVersion(void)
         flightVersion |= 4 << (8*2);
         flightVersion |= 1 << (8*1);
         flightVersion |= FIRMWARE_VERSION_TYPE_DEV << (8*0);
+
+        customSwVersion |= 1 << (8*3);
+        customSwVersion |= 4 << (8*2);
+        customSwVersion |= 1 << (8*1);
+        customSwVersion |= FIRMWARE_VERSION_TYPE_DEV << (8*0);
+
 #if !defined(NO_ARDUPILOT_DIALECT)
     }
 #endif
@@ -1029,7 +1036,8 @@ void MockLink::_respondWithAutopilotVersion(void)
                                             0,                               // vendor_id,
                                             0,                               // product_id,
                                             0,                               // uid
-                                            0);                              // uid2
+                                            0,                               // uid2
+                                            customSwVersion);                // custom_sw_version
     respondWithMavlinkMessage(msg);
 }
 
