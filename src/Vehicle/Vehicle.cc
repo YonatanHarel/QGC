@@ -179,6 +179,10 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _firmwareCustomMajorVersion(versionNotSetValue)
     , _firmwareCustomMinorVersion(versionNotSetValue)
     , _firmwareCustomPatchVersion(versionNotSetValue)
+    , _firmwareFcCustomMajorVersion(versionNotSetValue)
+    , _firmwareFcCustomMinorVersion(versionNotSetValue)
+    , _firmwareFcCustomPatchVersion(versionNotSetValue)
+    , _firmwareFcVersionType(FIRMWARE_VERSION_TYPE_OFFICIAL)
     , _firmwareVersionType(FIRMWARE_VERSION_TYPE_OFFICIAL)
     , _gitHash(versionNotSetValue)
     , _uid(0)
@@ -1297,6 +1301,26 @@ void Vehicle::_handleAutopilotVersion(LinkInterface *link, mavlink_message_t& me
         patchVersion = (autopilotVersion.flight_sw_version >> (8*1)) & 0xFF;
         versionType = (FIRMWARE_VERSION_TYPE)((autopilotVersion.flight_sw_version >> (8*0)) & 0xFF);
         setFirmwareVersion(majorVersion, minorVersion, patchVersion, versionType);
+    }
+
+//    if (autopilotVersion.custom_sw_version != 0) {
+//        int majorVersion, minorVersion, patchVersion;
+//        FIRMWARE_VERSION_TYPE versionType;
+
+//        majorVersion = (autopilotVersion.custom_sw_version >> (8*3)) & 0xFF;
+//        minorVersion = (autopilotVersion.custom_sw_version >> (8*2)) & 0xFF;
+//        patchVersion = (autopilotVersion.custom_sw_version >> (8*1)) & 0xFF;
+//        versionType = (FIRMWARE_VERSION_TYPE)((autopilotVersion.custom_sw_version >> (8*0)) & 0xFF);
+//        setFirmwareFcCustomVersion(majorVersion, minorVersion, patchVersion, versionType);
+//    }
+
+    if (autopilotVersion.custom_sw_version != 0) {
+        quint16 majorVersion, minorVersion, patchVersion;
+
+        majorVersion = (autopilotVersion.custom_sw_version >> (16*2));
+        minorVersion = (autopilotVersion.custom_sw_version >> (16*1));
+        patchVersion = (autopilotVersion.custom_sw_version >> (16*0));
+        setFirmwareFcCustomVersion(majorVersion, minorVersion, patchVersion);
     }
 
     if (px4Firmware()) {
@@ -3370,6 +3394,23 @@ void Vehicle::setFirmwareVersion(int majorVersion, int minorVersion, int patchVe
     _firmwareVersionType = versionType;
     emit firmwareVersionChanged();
 }
+
+void Vehicle::setFirmwareFcCustomVersion(int majorVersion, int minorVersion, int patchVersion, FIRMWARE_VERSION_TYPE versionType)
+{
+    _firmwareFcCustomMajorVersion = majorVersion;
+    _firmwareFcCustomMinorVersion = minorVersion;
+    _firmwareFcCustomPatchVersion = patchVersion;
+    _firmwareFcVersionType = versionType;
+    emit firmwareFcCustomVersionChanged();
+}
+
+//void Vehicle::setFirmwareFcCustomVersion(quint16 majorVersion, quint16 minorVersion, quint16 patchVersion)
+//{
+//    _firmwareFcCustomMajorVersion = majorVersion;
+//    _firmwareFcCustomMinorVersion = minorVersion;
+//    _firmwareFcCustomPatchVersion = patchVersion;
+//    emit firmwareFcCustomVersionChanged();
+//}
 
 void Vehicle::setFirmwareCustomVersion(int majorVersion, int minorVersion, int patchVersion)
 {
