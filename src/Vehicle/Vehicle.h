@@ -693,6 +693,9 @@ public:
     Q_PROPERTY(int      firmwarePatchVersion        READ firmwarePatchVersion       NOTIFY firmwareVersionChanged)
     Q_PROPERTY(int      firmwareVersionType         READ firmwareVersionType        NOTIFY firmwareVersionChanged)
     Q_PROPERTY(QString  firmwareVersionTypeString   READ firmwareVersionTypeString  NOTIFY firmwareVersionChanged)
+    Q_PROPERTY(int      firmwareFcCustomMajorVersion  READ firmwareFcCustomMajorVersion NOTIFY firmwareFcCustomVersionChanged)
+    Q_PROPERTY(int      firmwareFcCustomMinorVersion  READ firmwareFcCustomMinorVersion NOTIFY firmwareFcCustomVersionChanged)
+    Q_PROPERTY(int      firmwareFcCustomPatchVersion  READ firmwareFcCustomPatchVersion NOTIFY firmwareFcCustomVersionChanged)
     Q_PROPERTY(int      firmwareCustomMajorVersion  READ firmwareCustomMajorVersion NOTIFY firmwareCustomVersionChanged)
     Q_PROPERTY(int      firmwareCustomMinorVersion  READ firmwareCustomMinorVersion NOTIFY firmwareCustomVersionChanged)
     Q_PROPERTY(int      firmwareCustomPatchVersion  READ firmwareCustomPatchVersion NOTIFY firmwareCustomVersionChanged)
@@ -1046,11 +1049,16 @@ public:
     int firmwareMinorVersion() const { return _firmwareMinorVersion; }
     int firmwarePatchVersion() const { return _firmwarePatchVersion; }
     int firmwareVersionType() const { return _firmwareVersionType; }
+    int firmwareFcCustomMajorVersion(void) const { return _firmwareFcCustomMajorVersion; }
+    int firmwareFcCustomMinorVersion(void) const { return _firmwareFcCustomMinorVersion; }
+    int firmwareFcCustomPatchVersion(void) const { return _firmwareFcCustomPatchVersion; }
+    int firmwareFcVersionType(void) const { return _firmwareFcVersionType; }
     int firmwareCustomMajorVersion() const { return _firmwareCustomMajorVersion; }
     int firmwareCustomMinorVersion() const { return _firmwareCustomMinorVersion; }
     int firmwareCustomPatchVersion() const { return _firmwareCustomPatchVersion; }
     QString firmwareVersionTypeString() const;
     void setFirmwareVersion(int majorVersion, int minorVersion, int patchVersion, FIRMWARE_VERSION_TYPE versionType = FIRMWARE_VERSION_TYPE_OFFICIAL);
+    void setFirmwareFcCustomVersion(int majorVersion, int minorVersion, int patchVersion, FIRMWARE_VERSION_TYPE versionType = FIRMWARE_VERSION_TYPE_OFFICIAL);
     void setFirmwareCustomVersion(int majorVersion, int minorVersion, int patchVersion);
     static const int versionNotSetValue = -1;
 
@@ -1201,6 +1209,7 @@ signals:
     void orbitActiveChanged             (bool orbitActive);
 
     void firmwareVersionChanged         ();
+    void firmwareFcCustomVersionChanged(void);
     void firmwareCustomVersionChanged   ();
     void gitHashChanged                 (QString hash);
     void vehicleUIDChanged              ();
@@ -1522,10 +1531,14 @@ private:
     int _firmwareMajorVersion;
     int _firmwareMinorVersion;
     int _firmwarePatchVersion;
+    int _firmwareFcCustomMajorVersion;
+    int _firmwareFcCustomMinorVersion;
+    int _firmwareFcCustomPatchVersion;
     int _firmwareCustomMajorVersion;
     int _firmwareCustomMinorVersion;
     int _firmwareCustomPatchVersion;
     FIRMWARE_VERSION_TYPE _firmwareVersionType;
+    FIRMWARE_VERSION_TYPE _firmwareFcVersionType;
 
     QString _gitHash;
     quint64 _uid;
