@@ -1303,25 +1303,25 @@ void Vehicle::_handleAutopilotVersion(LinkInterface *link, mavlink_message_t& me
         setFirmwareVersion(majorVersion, minorVersion, patchVersion, versionType);
     }
 
-//    if (autopilotVersion.custom_sw_version != 0) {
-//        int majorVersion, minorVersion, patchVersion;
-//        FIRMWARE_VERSION_TYPE versionType;
-
-//        majorVersion = (autopilotVersion.custom_sw_version >> (8*3)) & 0xFF;
-//        minorVersion = (autopilotVersion.custom_sw_version >> (8*2)) & 0xFF;
-//        patchVersion = (autopilotVersion.custom_sw_version >> (8*1)) & 0xFF;
-//        versionType = (FIRMWARE_VERSION_TYPE)((autopilotVersion.custom_sw_version >> (8*0)) & 0xFF);
-//        setFirmwareFcCustomVersion(majorVersion, minorVersion, patchVersion, versionType);
-//    }
-
     if (autopilotVersion.custom_sw_version != 0) {
-        quint16 majorVersion, minorVersion, patchVersion;
+        int majorVersion, minorVersion, patchVersion;
+        FIRMWARE_VERSION_TYPE versionType;
 
-        majorVersion = (autopilotVersion.custom_sw_version >> (16*2));
-        minorVersion = (autopilotVersion.custom_sw_version >> (16*1));
-        patchVersion = (autopilotVersion.custom_sw_version >> (16*0));
-        setFirmwareFcCustomVersion(majorVersion, minorVersion, patchVersion);
+        majorVersion = (autopilotVersion.custom_sw_version >> (8*3)) & 0xFF;
+        minorVersion = (autopilotVersion.custom_sw_version >> (8*2)) & 0xFF;
+        patchVersion = (autopilotVersion.custom_sw_version >> (8*1)) & 0xFF;
+        versionType = (FIRMWARE_VERSION_TYPE)((autopilotVersion.custom_sw_version >> (8*0)) & 0xFF);
+        setFirmwareFcCustomVersion(majorVersion, minorVersion, patchVersion, versionType);
     }
+
+//    if (autopilotVersion.custom_sw_version != 0) {
+//        quint16 majorVersion, minorVersion, patchVersion;
+//
+//        majorVersion = (autopilotVersion.custom_sw_version >> (16*2));
+//        minorVersion = (autopilotVersion.custom_sw_version >> (16*1));
+//        patchVersion = (autopilotVersion.custom_sw_version >> (16*0));
+//        setFirmwareFcCustomVersion(majorVersion, minorVersion, patchVersion);
+//    }
 
     if (px4Firmware()) {
         // Lower 3 bytes is custom version
